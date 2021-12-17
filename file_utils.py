@@ -100,3 +100,33 @@ def get_file_names_in_path(path: pl.Path, search_pattern: str = "*.csv") -> list
     names = [file.name for file in files]
 
     return names
+
+
+def generate_dir(expected_path, subfolder=""):
+    """Generate a directory from a path and possibly a subfolder
+
+    Parameters
+    ----------
+    expected_path : str, Path
+        Path to the dir
+    subfolder : str, optional
+        Subfolder to append to the path
+
+    """
+
+    if len(subfolder) == 0:
+        # See if folder is present
+        dir_exists = os.path.isdir(expected_path)
+
+        if not dir_exists:
+            os.makedirs(expected_path)
+
+    else:
+        # Check if path exists
+        expected_path = str(pl.Path(expected_path, subfolder))
+        dir_exists = os.path.isdir(expected_path)
+
+        if not dir_exists:
+            os.makedirs(expected_path)
+
+    return expected_path
