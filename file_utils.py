@@ -49,7 +49,9 @@ def get_dirs_in_path(path: pl.Path) -> list:
     return dirs
 
 
-def get_files_in_path(path: pl.Path, search_pattern: str = "*.csv") -> list:
+def get_files_in_path(
+    path: pl.Path, search_pattern: str = "*.csv", recursively: bool = False
+) -> list:
     """Get sorted files in path
 
     Parameters
@@ -62,9 +64,13 @@ def get_files_in_path(path: pl.Path, search_pattern: str = "*.csv") -> list:
     list
         The files contained in path
     """
+    if recursively:
+        files = list(path.rglob(search_pattern))
+    else:
+        files = list(path.glob(search_pattern))
 
-    files = list(path.glob(search_pattern))
-
+    # Filter out dirs
+    files = [files[i] for i in range(len(files)) if not files[i].is_dir()]
     # Sort files
     files = [files[i] for i in np.argsort(files)]
 
