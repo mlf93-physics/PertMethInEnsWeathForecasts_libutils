@@ -24,13 +24,15 @@ def count_existing_files_or_dirs(search_path="", search_pattern="*.csv"):
     return n_files
 
 
-def get_dirs_in_path(path: pl.Path) -> list:
+def get_dirs_in_path(path: pl.Path, recursively=False) -> list:
     """Get sorted dirs in path
 
     Parameters
     ----------
     path : pl.Path
         The path to search for dirs
+    recursively : bool
+        Whether to search for dirs recursively or not
 
     Returns
     -------
@@ -38,7 +40,10 @@ def get_dirs_in_path(path: pl.Path) -> list:
         The dirs contained in path
     """
 
-    dirs = list(path.glob("*"))
+    if recursively:
+        dirs = list(path.rglob("*"))
+    else:
+        dirs = list(path.glob("*"))
 
     # Filter out anything else than directories
     dirs = [dirs[i] for i in range(len(dirs)) if dirs[i].is_dir()]
@@ -92,8 +97,6 @@ def get_file_names_in_path(path: pl.Path, search_pattern: str = "*.csv") -> list
 
     Parameters
     ----------
-    args : dict
-        Run-time arguments
     path : pl.Path
         The path to search for files
     search_pattern : str, optional
